@@ -10,6 +10,20 @@
 	
 }
 
-#labelPath{
-	
+#labelMain{
+	-fx-font-style: oblique;
+	-fx-font-weight: bold;
+	-fx-font-family: "Calibri";
+	-fx-font-size: 36;
 }
+
+#textCountOfFiles, #textTimeOut, #textSizeOfFile{
+	-fx-font-size: 18;
+	-fx-alignment: center-right;
+	}
+	
+#buttonMinusCountOfFiles, #buttonPlusCountOfFiles, #buttonPlusTimeOut, #buttonMinusTimeOut{
+	-fx-font-size: 8;
+	-fx-font-weight: bold;
+	/*-fx-pref-height: 10px;*/
+	}

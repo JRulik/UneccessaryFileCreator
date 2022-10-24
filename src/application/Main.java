@@ -93,7 +93,7 @@ public class Main extends Application {
 		
 		//------------------------------------------------------------------------------------------------- Nastaveni parametru stage
 		stage.setHeight(410);
-		stage.setWidth(460);
+		stage.setWidth(470);
 		//stage.setFullScreen(true);
 		//stage.setX(250);
 		//stage.setY(250);
