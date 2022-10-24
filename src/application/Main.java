@@ -50,6 +50,13 @@ public class Main extends Application {
 		stage.setTitle("Unecessary file creator");
 		
 		
+		//------------------------------------------------------------------------------------------------- Pridani ikony an scenu
+		Image image = new  Image(Main.class.getResourceAsStream("icon.png")); //nevim proc se muselo delat slozite, ale nejak neslo jinak
+		ImageView imageView = new ImageView(image);
+		imageView.setX(0);
+		imageView.setY(0);
+		//root.getChildren().add(imageView);
+		
 		
 		/*--------------------------Group root = new Group ();
 		//------------------------------------------------------------------------------------------------- Nastaveni Labelu
