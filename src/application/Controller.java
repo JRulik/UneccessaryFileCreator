@@ -1,5 +1,6 @@
 package application;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -12,31 +13,40 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 
 public class Controller implements Initializable{
 
 	@FXML //<- FXML loader nahraje .fxml soubor i sem a zde uz muzu pracovat s classou, ktera se jmenuje stejne jako id nastaveny necemu pres scene builder
-	TextField textTimeOut;
+	private TextField textTimeOut;
 	@FXML
-	TextField textCountOfFiles;
+	private TextField textCountOfFiles;
 	@FXML
-	TextField textSizeOfFile;
+	private TextField textSizeOfFile;
 	@FXML
-	CheckBox checkBoxUnlimited;
+	private TextField textPath;
 	@FXML
-	CheckBox checkBoxTimeOut;
+	private CheckBox checkBoxUnlimited;
 	@FXML
-	Slider sliderSizeOfFile;
-	
-	int sizeOfFile;
+	private CheckBox checkBoxTimeOut;
+	@FXML
+	private Slider sliderSizeOfFile;
+	@FXML
+	private AnchorPane anchorPane;
+
+	private int sizeOfFile;
 	
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
-		
+				
 		sliderSizeOfFile.setBlockIncrement(100);
 		
 		//TODO Slider which snap to ticks on drag
@@ -53,9 +63,24 @@ public class Controller implements Initializable{
 				});
 		
 		//sliderSizeOfFile
+		textPath.setText(System.getProperty("user.dir"));
 		
 	}
 	
+	
+	public void changeDirectory(ActionEvent event) {
+		final DirectoryChooser directoryChooser = new DirectoryChooser();
+		Stage stage = (Stage) anchorPane.getScene().getWindow();
+		directoryChooser.setTitle("Select folder to create files");
+		//fileChooser.setInitialDirectory(null);
+		directoryChooser.setInitialDirectory(new File (System.getProperty("user.dir")));
+		File file = directoryChooser.showDialog(stage);
+		
+		if (file != null) {
+			textPath.setText(file.getAbsolutePath());
+		}
+		
+	}
 	
 	public void  scrollSize(ActionEvent event) {
 		System.out.println("Butt1");
@@ -169,9 +194,7 @@ public class Controller implements Initializable{
 		}
 	}
 	
-	public void change(ActionEvent event) {
-		System.out.println("Butt1");
-	}
+
 	
 	public void start(ActionEvent event) {
 		System.out.println("Butt1");
