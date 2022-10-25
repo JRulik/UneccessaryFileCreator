@@ -14,7 +14,7 @@
 <AnchorPane maxHeight="368.0" maxWidth="457.0" minHeight="368.0" minWidth="444.0" prefHeight="368.0" prefWidth="457.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
    <children>
       <Button fx:id="buttonStart" layoutX="97.0" layoutY="236.0" mnemonicParsing="false" onAction="#start" prefHeight="25.0" prefWidth="95.0" text="START" />
-      <Slider fx:id="sliderSizeOfFile" layoutX="31.0" layoutY="55.0" majorTickUnit="5000.0" max="10000.0" minorTickCount="10" nodeOrientation="RIGHT_TO_LEFT" onDragDetected="#scrollSize" orientation="VERTICAL" prefHeight="301.0" prefWidth="50.0" showTickLabels="true" showTickMarks="true" />
+      <Slider fx:id="sliderSizeOfFile" blockIncrement="100.0" layoutX="24.0" layoutY="55.0" majorTickUnit="1000.0" max="5000.0" minorTickCount="4" nodeOrientation="RIGHT_TO_LEFT" onDragDetected="#scrollSize" orientation="VERTICAL" prefHeight="301.0" prefWidth="50.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" styleClass="sliderSizeOfFile" />
       <TextField fx:id="textSizeOfFile" layoutX="98.0" layoutY="78.0" prefHeight="34.0" prefWidth="109.0" text="1000" />
       <Label fx:id="labelSizeOfFile" layoutX="97.0" layoutY="61.0" prefHeight="17.0" prefWidth="149.0" text="Size of file" />
       <TextField fx:id="textCountOfFiles" layoutX="97.0" layoutY="137.0" prefHeight="34.0" prefWidth="77.0" text="1" />
@@ -66,7 +66,7 @@
             <Font name="System Bold" size="36.0" />
          </font>
       </Label>
-      <ImageView fx:id="imageIcon" fitHeight="71.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imageIcon" fitHeight="71.0" fitWidth="62.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@icon.png" />
          </image>

@@ -22,7 +22,7 @@
 	-fx-alignment: center-right;
 	}
 	
-#buttonMinusCountOfFiles, #buttonPlusCountOfFiles, #buttonPlusTimeOut, #buttonMinusTimeOut{
+#buttonMinusCountOfFiles, #buttonPlusCountOfFiles, #buttkpcoasionPlusTimeOut, #buttonMinusTimeOut{
 	-fx-font-size: 8;
 	-fx-font-weight: bold;
 	/*-fx-pref-height: 10px;*/
@@ -38,5 +38,15 @@
 
 .textTimeOut{
 	-fx-control-inner-background: #bababa;
-	
+}
+
+.sliderSizeOfFile .axis {
+    -fx-tick-label-font-size: 16px;
+    -fx-tick-label-font-family: "Arial";
+    -fx-tick-label-font-weight: bold;
+}
+
+
+.sliderSizeOfFile {
+	-fx-snap-to-ticks: "true";
 }

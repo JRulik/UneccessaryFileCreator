@@ -1,22 +1,61 @@
 package application;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 
-public class Controller {
+public class Controller implements Initializable{
 
 	@FXML //<- FXML loader nahraje .fxml soubor i sem a zde uz muzu pracovat s classou, ktera se jmenuje stejne jako id nastaveny necemu pres scene builder
 	TextField textTimeOut;
 	@FXML
 	TextField textCountOfFiles;
 	@FXML
+	TextField textSizeOfFile;
+	@FXML
 	CheckBox checkBoxUnlimited;
 	@FXML
 	CheckBox checkBoxTimeOut;
+	@FXML
+	Slider sliderSizeOfFile;
+	
+	int sizeOfFile;
+	
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		
+		
+		sliderSizeOfFile.setBlockIncrement(100);
+		
+		//TODO Slider which snap to ticks on drag
+		//TODO change this lambda expresion, maybe with :: operator and new method
+		sliderSizeOfFile.valueProperty().addListener(new ChangeListener<Number>() {
+
+						@Override
+						public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
+							sliderSizeOfFile.setValue((newValue.intValue()));
+							sizeOfFile =   (int) sliderSizeOfFile.getValue();
+							textSizeOfFile.setText(Integer.toString(sizeOfFile));		
+							
+						}	
+				});
+		
+		//sliderSizeOfFile
+		
+	}
+	
 	
 	public void  scrollSize(ActionEvent event) {
 		System.out.println("Butt1");
@@ -141,4 +180,5 @@ public class Controller {
 	public void stop(ActionEvent event) {
 		System.out.println("Stop");
 	}
+
 }
