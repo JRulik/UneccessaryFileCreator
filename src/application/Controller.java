@@ -65,7 +65,7 @@ public class Controller {
 	public void timeOutMinus(ActionEvent event) {
 		try {
 			int count = Integer.parseInt(textTimeOut.getText());
-			if (count>1) {
+			if (count>0) {
 				count--;
 				textTimeOut.setText(Integer.toString(count));
 			}
