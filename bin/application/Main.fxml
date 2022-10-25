@@ -42,10 +42,10 @@
          <font>
             <Font size="32.0" />
          </font></Label>
-      <CheckBox layoutX="255.0" layoutY="136.0" mnemonicParsing="false" prefHeight="15.0" prefWidth="86.0" text="Unlimited" />
+      <CheckBox fx:id="checkBoxUnlimited" layoutX="255.0" layoutY="136.0" mnemonicParsing="false" onAction="#unlimitedOnOff" prefHeight="15.0" prefWidth="86.0" text="Unlimited" />
       <Button fx:id="buttonStop" layoutX="208.0" layoutY="236.0" mnemonicParsing="false" onAction="#stop" prefHeight="25.0" prefWidth="95.0" text="STOP" />
-      <CheckBox layoutX="255.0" layoutY="154.0" mnemonicParsing="false" prefHeight="15.0" prefWidth="86.0" text="Timeout" />
-      <TextField fx:id="textTimeOut" layoutX="341.0" layoutY="138.0" prefHeight="34.0" prefWidth="49.0" text="0" />
+      <CheckBox fx:id="checkBoxTimeOut" layoutX="255.0" layoutY="154.0" mnemonicParsing="false" onAction="#timeOutOnOff" prefHeight="15.0" prefWidth="86.0" text="Timeout" />
+      <TextField fx:id="textTimeOut" layoutX="345.0" layoutY="140.0" prefHeight="34.0" prefWidth="49.0" styleClass="textTimeOut" text="0" />
       <Button fx:id="buttonPlusTimeOut" layoutX="410.0" layoutY="137.0" mnemonicParsing="false" onAction="#timeOutPlus" prefHeight="17.0" prefWidth="34.0" text="+ 1">
          <font>
             <Font size="7.0" />

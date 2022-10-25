@@ -27,3 +27,16 @@
 	-fx-font-weight: bold;
 	/*-fx-pref-height: 10px;*/
 	}
+	
+.disabled {
+  -fx-control-inner-background: #bababa;
+}
+
+.enabled {
+  -fx-control-inner-background: white;
+}
+
+.textTimeOut{
+	-fx-control-inner-background: #bababa;
+	
+}
