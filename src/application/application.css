@@ -50,3 +50,8 @@
 .sliderSizeOfFile {
 	-fx-snap-to-ticks: "true";
 }
+
+
+.textAreaLog{
+	-fx-background-color: white;
+}

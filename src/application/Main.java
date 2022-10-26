@@ -33,7 +33,7 @@ public class Main extends Application {
 		System.out.println();
 		System.out.println(getClass());
 		//Group root = new Group ();
-		Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
+		Parent root = FXMLLoader.load(this.getClass().getResource("Main.fxml"));
 		//Parent root = FXMLLoader.load(getClass().getResource("/Main.fxml"));
 		
 		Scene scene = new Scene(root);
@@ -59,6 +59,7 @@ public class Main extends Application {
 		
 		
 		/*--------------------------Group root = new Group ();
+		//------------------------------------------------------------ Nastaveni pozdeji reseno pres css a fxml
 		//------------------------------------------------------------------------------------------------- Nastaveni Labelu
 		Text text = new Text();
 		text.setText("Boøek");

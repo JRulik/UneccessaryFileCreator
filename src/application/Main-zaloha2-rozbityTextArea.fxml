@@ -3,16 +3,14 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.TextFlow?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="375.0" maxWidth="457.0" minHeight="368.0" minWidth="444.0" prefHeight="375.0" prefWidth="457.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
+<AnchorPane fx:id="anchorPane" maxHeight="368.0" maxWidth="457.0" minHeight="368.0" minWidth="444.0" prefHeight="368.0" prefWidth="457.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
    <children>
       <Button fx:id="buttonStart" layoutX="97.0" layoutY="236.0" mnemonicParsing="false" onAction="#start" prefHeight="25.0" prefWidth="95.0" text="START" />
       <Slider fx:id="sliderSizeOfFile" blockIncrement="100.0" layoutX="24.0" layoutY="55.0" majorTickUnit="1000.0" max="5000.0" minorTickCount="4" nodeOrientation="RIGHT_TO_LEFT" orientation="VERTICAL" prefHeight="301.0" prefWidth="50.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" styleClass="sliderSizeOfFile" />
@@ -61,7 +59,7 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <Label fx:id="labelTime" layoutX="353.0" layoutY="222.0" prefHeight="53.0" prefWidth="95.0" text="00:00" textFill="#ff0303">
+      <Label fx:id="labelTime" layoutX="322.0" layoutY="222.0" prefHeight="53.0" prefWidth="95.0" text="00:00" textFill="#ff0303">
          <font>
             <Font name="System Bold" size="36.0" />
          </font>
@@ -72,10 +70,5 @@
          </image>
       </ImageView>
       <Label fx:id="labelCountOfFiles1" layoutX="343.0" layoutY="119.0" prefHeight="17.0" prefWidth="101.0" text="TimeOut" />
-      <ScrollPane fx:id="scrollPaneTextFlow" layoutX="82.0" layoutY="275.0" prefHeight="86.0" prefWidth="360.0">
-         <content>
-            <TextFlow fx:id="textAreaLog" prefHeight="84.0" prefWidth="351.0" styleClass="textAreaLog" />
-         </content>
-      </ScrollPane>
    </children>
 </AnchorPane>
