@@ -59,13 +59,14 @@ public class Controller implements Initializable{
 	private ScrollPane scrollPaneTextFlow;
 	
 	private int sizeOfFile;
-	private int count=0;
+	//private int count=0;
 
+	private CreateFileThread createFilethread;
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
 				
-		
 	      /*
 	      //Setting the line spacing between the text objects 
 		textAreaLog.setTextAlignment(TextAlignment.JUSTIFY); 
@@ -94,11 +95,12 @@ public class Controller implements Initializable{
 						@Override
 						public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
 							sliderSizeOfFile.setValue((newValue.intValue()));
-							sizeOfFile =   (int) sliderSizeOfFile.getValue();
+							sizeOfFile =  ((int) sliderSizeOfFile.getValue()/100*100);
 							textSizeOfFile.setText(Integer.toString(sizeOfFile));		
 							
 						}	
 				});
+		sliderSizeOfFile.setValue(Integer.parseInt(textSizeOfFile.getText()));
 		
 		//sliderSizeOfFile
 		textPath.setText(System.getProperty("user.dir"));
@@ -108,38 +110,29 @@ public class Controller implements Initializable{
 	
 	public void start(ActionEvent event) {
 		
-
-		
+		//Vycisti log areu
+		textAreaLog.getChildren().clear();
 		
 		String path = textPath.getText();
 		if(new File(path).exists()) {
 			
+			//hlavni cyklus START
+			boolean isUnlimitedFiles = this.checkBoxUnlimited.isSelected();
+			boolean isTimeOut = this.checkBoxUnlimited.isSelected();
+			long countsOfFiles = Integer.parseInt(this.textCountOfFiles.getText());
+			long time = Integer.parseInt(this.textTimeOut.getText());
 			
-	           try {
-				File file = createFile(textPath.getText()+"\\"+count,5000);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				setLogError(" Cannot create file! Mabye to less space "+textPath.getText()+"\\"+count+"\n");
-			}
-	           
-	           
+			//TODO predelat false na promennou, provazat s cheklbvoxem destroy after create
+	         createFilethread = new CreateFileThread(isUnlimitedFiles,isTimeOut, false, countsOfFiles, time);
+	          
+	
+			
 		}
 		else{
-			count++;
-			setLogError(" Given folder does not exist! "+textPath.getText()+"\\"+count+"\n");
+			setLogError(" Given folder does not exist! "+textPath.getText() +"\n");
 		}
 	}
-	
-	private File createFile(final String filename, final long sizeInBytes) throws IOException {
-		  File file = new File(filename);
-		  file.createNewFile();
-		  
-		  RandomAccessFile raf = new RandomAccessFile(file, "rw");
-		  raf.setLength(sizeInBytes);
-		  raf.close();
-		  
-		  return file;
-		}
+
 	
 	public void setLogError(String msg) {
 		//String text = textAreaLog.getText();

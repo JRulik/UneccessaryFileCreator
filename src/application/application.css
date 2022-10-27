@@ -52,6 +52,31 @@
 }
 
 
+/* 
+.sliderSizeOfFile .track {
+    -fx-pref-height:10;
+}*/
+
+.sliderSizeOfFile:vertical .track {
+    -fx-pref-width:15;
+}
+
+.sliderSizeOfFile .thumb {
+    -fx-pref-height: 15;
+    -fx-pref-width: 15;
+}
+
 .textAreaLog{
 	-fx-background-color: white;
 }
+
+.separator{
+	-fx-opacity: 0.75;
+}
+
+/*  Priprava pro zarovnani prvku podle osy 
+ * TODO zprovoznit
+ */
+.LeftAlign{
+}
+*/
