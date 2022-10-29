@@ -125,8 +125,6 @@ public class Controller implements Initializable{
 			//TODO predelat false na promennou, provazat s cheklbvoxem destroy after create
 	         createFilethread = new CreateFileThread(isUnlimitedFiles,isTimeOut, false, countsOfFiles, time);
 	          
-	
-			
 		}
 		else{
 			setLogError(" Given folder does not exist! "+textPath.getText() +"\n");
