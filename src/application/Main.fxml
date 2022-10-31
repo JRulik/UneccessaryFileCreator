@@ -73,9 +73,9 @@
          </image>
       </ImageView>
       <Label fx:id="LabelTimeOut" layoutX="254.0" layoutY="135.0" prefHeight="17.0" prefWidth="185.0" text="Time out between creating files" />
-      <ScrollPane fx:id="scrollPaneTextFlow" layoutX="74.0" layoutY="323.0" prefHeight="136.0" prefWidth="361.0">
+      <ScrollPane fx:id="scrollPaneTextFlow" layoutX="74.0" layoutY="323.0" prefHeight="127.0" prefWidth="361.0">
          <content>
-            <TextFlow fx:id="textAreaLog" layoutX="75.0" prefHeight="135.0" prefWidth="349.0" styleClass="textAreaLog leftAlign" />
+            <TextFlow fx:id="textAreaLog" layoutX="75.0" prefHeight="119.0" prefWidth="349.0" styleClass="textAreaLog leftAlign" />
          </content>
       </ScrollPane>
       <Separator layoutX="74.0" layoutY="134.0" opacity="0.25" prefHeight="3.0" prefWidth="361.0" styleClass="separator leftAlign" />

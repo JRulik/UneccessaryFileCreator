@@ -58,10 +58,17 @@ public class Controller implements Initializable{
 	@FXML
 	private ScrollPane scrollPaneTextFlow;
 	
-	private int sizeOfFile;
-	//private int count=0;
 
-	private CreateFileThread createFilethread;
+
+	private CreateFileTask createFileTask;
+	
+	private boolean isUnlimitedFiles;
+	private boolean isTimeOut ;
+	private long countsOfFiles ;
+	private long time ;
+	private long sizeOfFile ;
+	private Thread createFileThread;
+	private Thread createTimeThread;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -91,12 +98,11 @@ public class Controller implements Initializable{
 		//TODO Slider which snap to ticks on drag
 		//TODO change this lambda expresion, maybe with :: operator and new method
 		sliderSizeOfFile.valueProperty().addListener(new ChangeListener<Number>() {
-
 						@Override
 						public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
 							sliderSizeOfFile.setValue((newValue.intValue()));
 							sizeOfFile =  ((int) sliderSizeOfFile.getValue()/100*100);
-							textSizeOfFile.setText(Integer.toString(sizeOfFile));		
+							textSizeOfFile.setText(Long.toString(sizeOfFile));		
 							
 						}	
 				});
@@ -107,6 +113,12 @@ public class Controller implements Initializable{
 		
 	}
 	
+
+	public void stop(ActionEvent event) {
+		if(createFileTask.isRunning()) {
+			createFileTask.cancel();
+		}
+	}
 	
 	public void start(ActionEvent event) {
 		
@@ -117,24 +129,58 @@ public class Controller implements Initializable{
 		if(new File(path).exists()) {
 			
 			//hlavni cyklus START
-			boolean isUnlimitedFiles = this.checkBoxUnlimited.isSelected();
-			boolean isTimeOut = this.checkBoxUnlimited.isSelected();
-			long countsOfFiles = Integer.parseInt(this.textCountOfFiles.getText());
-			long time = Integer.parseInt(this.textTimeOut.getText());
-			
-			//TODO predelat false na promennou, provazat s cheklbvoxem destroy after create
-	         createFilethread = new CreateFileThread(isUnlimitedFiles,isTimeOut, false, countsOfFiles, time);
-	          
+			try{
+				 isUnlimitedFiles = this.checkBoxUnlimited.isSelected();
+				 isTimeOut = this.checkBoxTimeOut.isSelected();
+				 countsOfFiles = Integer.parseInt(this.textCountOfFiles.getText());
+				 time = Integer.parseInt(this.textTimeOut.getText());
+				 sizeOfFile = Long.parseLong(this.textSizeOfFile.getText());
+				 
+				 if(countsOfFiles<0 || time<0 || sizeOfFile<0) {
+					 throw new Exception();
+				 }
+				 
+					//TODO predelat false na promennou, provazat s cheklbvoxem destroy after create
+		         createFileTask = new CreateFileTask(path,isUnlimitedFiles, isTimeOut, false, countsOfFiles, time, sizeOfFile);
+		         
+		         createFileTask.messageProperty().addListener(new ChangeListener<String>() {
+						@Override
+						public void changed(ObservableValue<? extends String> obs, String oldMsg, String newMsg) {
+							setLogInfo(newMsg);	
+						}
+				});
+		         
+		         
+		         createFileThread = new Thread (createFileTask);
+		         createFileThread.setDaemon(true);
+		         createFileThread.start();
+		         
+				 
+			}
+			catch(Exception e) {
+				setLogError("One of parameters is wrong!");
+			}          	           
 		}
 		else{
 			setLogError(" Given folder does not exist! "+textPath.getText() +"\n");
 		}
+		
 	}
 
 	
+	public void setLogInfo(String msg) {
+		//String text = textAreaLog.getText();
+		Text text = new Text(msg+"\n");
+		//text.setFill(Color.RED);
+		text.setStyle("-fx-fill: #000000;");
+		//text.setFont(Font.font("Calibri", FontPosture.REGULAR, 16));
+		textAreaLog.getChildren().add(text);
+		//textAreaLog.setStyle("-fx-text-fill: red ;") ;
+	}
+	
 	public void setLogError(String msg) {
 		//String text = textAreaLog.getText();
-		Text text = new Text(msg);
+		Text text = new Text(msg+"\n");
 		//text.setFill(Color.RED);
 		text.setStyle("-fx-fill: #EE4B2B;"
 					+ "-fx-font-weight:bold;");
@@ -142,10 +188,7 @@ public class Controller implements Initializable{
 		textAreaLog.getChildren().add(text);
 		//textAreaLog.setStyle("-fx-text-fill: red ;") ;
 	}
-	
-	public void stop(ActionEvent event) {
-		System.out.println("Stop");
-	}
+
 
 	
 	/**
