@@ -18,6 +18,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -63,6 +67,8 @@ public class Controller implements Initializable{
 	@FXML
 	private ScrollPane scrollPaneTextFlow;
 	
+	@FXML
+	private Button buttonStart;
 
 
 	private CreateFileTask createFileTask;
@@ -121,12 +127,22 @@ public class Controller implements Initializable{
 	
 
 	public void stop(ActionEvent event) {
-		if(createFileTask.isRunning()) {
+		if(createFileTask != null && createFileTask.isRunning()) {
 			createFileTask.cancel();
 		}
-		if(timeControlTask.isRunning()) {
+		if(timeControlTask != null && timeControlTask.isRunning()) {
 			timeControlTask.cancel();
 		}
+		
+        buttonStart.setDisable(false);
+        textCountOfFiles.setDisable(false);
+        textTimeOut.setDisable(false);
+        textSizeOfFile.setDisable(false);
+        checkBoxTimeOut.setDisable(false);
+        checkBoxUnlimited.setDisable(false);
+        textPath.setDisable(false);
+        
+		
 	}
 	
 	public void start(ActionEvent event) {
@@ -156,8 +172,29 @@ public class Controller implements Initializable{
 			try{
 				 isUnlimitedFiles = this.checkBoxUnlimited.isSelected();
 				 isTimeOut = this.checkBoxTimeOut.isSelected();
-				 countsOfFiles = Integer.parseInt(this.textCountOfFiles.getText());
 				 time = Integer.parseInt(this.textTimeOut.getText());
+				 
+				 if (isUnlimitedFiles && (!isTimeOut || time==0)) {
+					 Alert alert = new Alert(AlertType.WARNING, "Are you sure you want unlimited files and no timeout? This can use your disk capacity nad lower its lifespan", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+					 alert.showAndWait();
+					 if (alert.getResult() != ButtonType.YES) {
+						   return;
+						}
+				 }
+				 
+				 
+				 //osetreni vstupu, pokud tam je nekonecno
+				 if (this.textCountOfFiles.getText().equals("∞")) {			 
+					 countsOfFiles = 0; //<- check na nekonecno se dela ve vlakne createTask s isUnlimited, tato hodnota je jedno pak
+					 isUnlimitedFiles = true;
+				 }
+				 else {
+					 countsOfFiles = Integer.parseInt(this.textCountOfFiles.getText());
+				 }
+				 
+				 
+				 
+				 
 				 sizeOfFile = Long.parseLong(this.textSizeOfFile.getText());
 				 
 				 if(countsOfFiles<0 || time<0 || sizeOfFile<0) {
@@ -173,14 +210,20 @@ public class Controller implements Initializable{
 						@Override
 						public void changed(ObservableValue<? extends String> obs, String oldMsg, String newMsg) {
 									
-							if (createFileTask.isCancelled()) {
-								setLogError("Cancelled!");
-							}
-							else if (createFileTask.isDone()){
-								setLogInfo("Done!");
+							if (createFileTask.isCancelled() || createFileTask.isDone()) {
 								if (timeControlTask != null && timeControlTask.isRunning()) {
 									timeControlTask.cancel();
 								}
+								setLogError(newMsg);
+								
+						        buttonStart.setDisable(false);
+						        textCountOfFiles.setDisable(false);
+						        textTimeOut.setDisable(false);
+						        textSizeOfFile.setDisable(false);
+						        checkBoxTimeOut.setDisable(false);
+						        checkBoxUnlimited.setDisable(false);
+						        textPath.setDisable(false);
+								
 							}
 							else {
 								setLogInfo(newMsg);
@@ -224,6 +267,16 @@ public class Controller implements Initializable{
 		         timeControlThread.setDaemon(true);
 		         //start = Instant.now();
 		         timeControlThread.start();
+		         
+		         buttonStart.setDisable(true);
+		         textCountOfFiles.setDisable(true);
+		         textTimeOut.setDisable(true);
+		         textSizeOfFile.setDisable(true);
+		         checkBoxTimeOut.setDisable(true);
+		         checkBoxUnlimited.setDisable(true);
+		         textPath.setDisable(true);
+		         
+		         
 				 
 			}
 			catch(Exception e) {

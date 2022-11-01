@@ -19,6 +19,7 @@ public class CreateFileTask extends Task<Long>{
 	private final long time;
 	private final long sizeOfFile;
 	private final String path;
+	private final int threadSleepConstant = 6;
 	
 	public CreateFileTask(String path, boolean isUnlimitedFiles, boolean isTimeOut, boolean isDestroyAfterCreate,
 		long countOfFiles, long time, long sizeOfFile) {
@@ -26,7 +27,13 @@ public class CreateFileTask extends Task<Long>{
 		this.isUnlimitedFiles = isUnlimitedFiles;
 		this.isTimeOut = isTimeOut;
 		this.isDestroyAfterCreate = isDestroyAfterCreate;
-		this.countOfFiles = countOfFiles;
+		
+		if(isUnlimitedFiles) {
+			this.countOfFiles=Long.MAX_VALUE;
+		}else {
+			this.countOfFiles = countOfFiles;
+		}
+		
 		this.time = time;
 		this.sizeOfFile= sizeOfFile;
 		this.path=path;
@@ -70,12 +77,13 @@ public class CreateFileTask extends Task<Long>{
 			System.out.println(i);
 			
 			if (numberOfFile==countOfFiles) {
+				Thread.sleep(threadSleepConstant);
 				break;
 			}
 			
             try {
             
-            	Thread.sleep(1+sleepTime*1000);
+            	Thread.sleep(threadSleepConstant+sleepTime*1000);
             } catch (InterruptedException interrupted) {
             	/*
                 if (isCancelled()) {
@@ -91,6 +99,7 @@ public class CreateFileTask extends Task<Long>{
 		}
 		//Nelze tady pouzit -> updatne massage driv nez se puvodni propsie do textArea
 		//updateMessage("Finished");
+		Thread.sleep(threadSleepConstant);
         return i;
 	}
 	

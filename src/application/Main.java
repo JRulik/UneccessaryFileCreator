@@ -20,7 +20,9 @@ import javafx.scene.text.Text;
 
 
 public class Main extends Application {
-
+	
+	//version of application
+	private static double version = 0.75;
 	
 	public static void main(String[] args) {
 		System.out.println("TEST");
@@ -47,7 +49,7 @@ public class Main extends Application {
 		//------------------------------------------------------------------------------------------------- set icon a hlavi label nazev programu na stage
 		Image icon = new  Image(Main.class.getResourceAsStream("icon.png")); //nevim proc se muselo delat slozite, ale nejak neslo jinak
 		stage.getIcons().add(icon);
-		stage.setTitle("Unecessary file creator");
+		stage.setTitle("Unecessary file creator "+version);
 		
 		
 		//------------------------------------------------------------------------------------------------- Pridani ikony an scenu
