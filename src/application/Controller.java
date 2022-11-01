@@ -218,7 +218,7 @@ public class Controller implements Initializable{
 				taskService.CreateFileTaskInit();
 				
 				//TODO change to lambda
-				//had to add listener here for interaction with UI (can be change to past as parameter)
+				//TODO had to add listener here for interaction with UI (setLogError()/SetLogInfo() <- can be change to past element as parameter to Service constructor)
 				taskService.getFileCreateTask().messageProperty().addListener(new ChangeListener<String>() {
 					@Override
 					public void changed(ObservableValue<? extends String> obs, String oldMsg, String newMsg) {
@@ -237,6 +237,7 @@ public class Controller implements Initializable{
 				
 				taskService.timeControlTaskInit();
 				//TODO change to lambda
+				//TODO had to add listener here for interaction with UI (labelTime <- can be change to past element as parameter to Service constructor)
 				taskService.getTimeControlTask().valueProperty().addListener(new ChangeListener<Integer>() {
 					@Override
 					public void changed(ObservableValue<? extends Integer> list, Integer oldValue, Integer newValue) {

@@ -1,6 +1,4 @@
 package application;
-	
-
 
 import resources.*;
 
@@ -18,13 +16,17 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-
+/**
+ * Main Class to init JAVAFX 
+ * @author Adminator
+ *
+ */
 public class Main extends Application {
 	
 	/**
 	 * Version of application (seen in main bar)
 	 */
-	private static double version = 0.86;
+	private static double version = 0.91;
 	
 	/**
 	 * Main method, using lunch metod from JavaFX to run main JavaFX thread
@@ -51,13 +53,13 @@ public class Main extends Application {
 		String css = this.getClass().getResource("/resources/application.css").toExternalForm();
 		scene.getStylesheets().add(css);
 		
-		//------------------------------------------------------------------------------------------------- set icon a hlavni label nazev programu na stage
+		// set icon a hlavni label nazev programu na stage
 		Image icon = new  Image(Main.class.getResourceAsStream("/resources/icon.png")); //nevim proc se muselo delat slozite, ale nejak neslo jinak
 		stage.getIcons().add(icon);
 		stage.setTitle("Unecessary file creator "+version);
 		
 		
-		//------------------------------------------------------------------------------------------------- Pridani ikony an scenu
+		//Pridani ikony an scenu
 		Image image = new  Image(Main.class.getResourceAsStream("/resources/icon.png")); //nevim proc se muselo delat slozite, ale nejak neslo jinak
 		ImageView imageView = new ImageView(image);
 		imageView.setX(0);

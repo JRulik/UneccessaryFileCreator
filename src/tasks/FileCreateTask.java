@@ -38,7 +38,7 @@ public class FileCreateTask extends Task<Long>{
 	private final int threadSleepConstant = 15;
 	
 	/**
-	 * 
+	 * Construc of file creating thread
 	 * @param path path to created file
 	 * @param isUnlimitedFiles boolean if is limited count of file (if true, count is set to long.maxvalue)
 	 * @param isTimeOut boolean if is timeout set between creating files.

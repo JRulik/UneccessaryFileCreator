@@ -9,8 +9,16 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 
+/**
+ * Class to service interface between main thread (javaFX thread) and background threads
+ * @author Adminator
+ *
+ */
 public class TaskService {
 	
+	/**
+	 * Params needed to check User input in UI. Given in constructor from main thread.
+	 */
 	private TextField textTimeOut;
 	private TextField textCountOfFiles;
 	private TextField textSizeOfFile;
@@ -19,18 +27,6 @@ public class TaskService {
 	private CheckBox checkBoxTimeOut;
 	private CheckBox checkBoxDeleteAfterCreate;	
 	
-	public TaskService(TextField textTimeOut, TextField textCountOfFiles, TextField textSizeOfFile, TextField textPath,
-			CheckBox checkBoxUnlimited, CheckBox checkBoxTimeOut, CheckBox checkBoxDeleteAfterCreate) {
-		super();
-		this.textTimeOut = textTimeOut;
-		this.textCountOfFiles = textCountOfFiles;
-		this.textSizeOfFile = textSizeOfFile;
-		this.textPath = textPath;
-		this.checkBoxUnlimited = checkBoxUnlimited;
-		this.checkBoxTimeOut = checkBoxTimeOut;
-		this.checkBoxDeleteAfterCreate = checkBoxDeleteAfterCreate;
-	}
-
 	/**
 	 * Task and thread variables to save them out of methods
 	 */
@@ -49,6 +45,29 @@ public class TaskService {
 	private long time ;
 	private long sizeOfFile ;
 	
+	
+	/**
+	 * Constructor of Task service thread
+	 * @param textTimeOut TextField from UI (JAVAFX)
+	 * @param textCountOfFiles  TextField from UI (JAVAFX)
+	 * @param textSizeOfFile  TextField from UI (JAVAFX)
+	 * @param textPath  TextField from UI (JAVAFX)
+	 * @param checkBoxUnlimited  CheckBox from UI (JAVAFX)
+	 * @param checkBoxTimeOut CheckBox from UI (JAVAFX)
+	 * @param checkBoxDeleteAfterCreate CheckBox from UI (JAVAFX)
+	 */
+	public TaskService(TextField textTimeOut, TextField textCountOfFiles, TextField textSizeOfFile, TextField textPath,
+			CheckBox checkBoxUnlimited, CheckBox checkBoxTimeOut, CheckBox checkBoxDeleteAfterCreate) {
+		super();
+		this.textTimeOut = textTimeOut;
+		this.textCountOfFiles = textCountOfFiles;
+		this.textSizeOfFile = textSizeOfFile;
+		this.textPath = textPath;
+		this.checkBoxUnlimited = checkBoxUnlimited;
+		this.checkBoxTimeOut = checkBoxTimeOut;
+		this.checkBoxDeleteAfterCreate = checkBoxDeleteAfterCreate;
+	}
+
 	/**
 	 * Stop Tasks if running
 	 */
@@ -70,6 +89,10 @@ public class TaskService {
 		stopTasks();	
 	}
 	
+	/**
+	 * Parse user input from UI elements given in constructor
+	 * @throws Exception if something is not able to be parsed 
+	 */
 	public void parseUIInputs() throws Exception {
 		 isUnlimitedFiles = this.checkBoxUnlimited.isSelected();
 		 isTimeOut = this.checkBoxTimeOut.isSelected();
@@ -102,32 +125,26 @@ public class TaskService {
 		 }
 	}	
 	
+	/**
+	 * Create Task to creating files. Parse inputs from UI (therefore throws Exception)
+	 * @throws Exception
+	 */
 	public void CreateFileTaskInit() throws Exception {
 	 	 parseUIInputs();
 	     createFileTask = new FileCreateTask(textPath.getText(),isUnlimitedFiles, isTimeOut, isDeleteAfterCreate, countsOfFiles, time, sizeOfFile);
-	     //TODO do lambda expression
-	     createFileTask.messageProperty().addListener(new ChangeListener<String>() {
-				@Override
-				public void changed(ObservableValue<? extends String> obs, String oldMsg, String newMsg) {
-							
-					if (createFileTask.isCancelled() || createFileTask.isDone()) {
-						if (timeControlTask != null && timeControlTask.isRunning()) {
-							timeControlTask.cancel();
-						}
-						//setLogError(newMsg);
-						//setNodesDiabled(false,nodes);
-					}
-					else {
-						//setLogInfo(newMsg);
-					}
-				}
-	     });
 	}
 	
+	/**
+	 * Create Task to control time (timewatch)
+	 */
 	public void timeControlTaskInit() {
         timeControlTask = new TimeControlTask();	         
 	}
 	
+
+	/**
+	 * start Task to control time (timewatch)
+	 */
 	public void runTimeControlTask() {
 	     //start timeControlThread
         timeControlThread = new Thread (timeControlTask);
@@ -135,10 +152,17 @@ public class TaskService {
         timeControlThread.start();
 	}
 	
+	/**
+	 * return instance of timeControlTask
+	 * @return timeControlTask
+	 */
 	public TimeControlTask getTimeControlTask() {
 		return timeControlTask;
 	}
 	
+	/**
+	 * start Task to creating files
+	 */
 	public void runCreateFileTask() {
 	     //start crreateFile Task
 	     createFileThread = new Thread (createFileTask);
@@ -146,6 +170,10 @@ public class TaskService {
 	     createFileThread.start();
 	}
 	
+	/**
+	 * return instance of createFileTask
+	 * @return createFileTask
+	 */
 	public FileCreateTask getFileCreateTask() {
 		return createFileTask;
 	}
