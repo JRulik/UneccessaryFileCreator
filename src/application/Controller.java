@@ -104,7 +104,7 @@ public class Controller implements Initializable{
 	@FXML
 	private Separator separator3;	
 	
-	private CreateFileTask createFileTask;
+	private FileCreateTask createFileTask;
 	private TimeControlTask timeControlTask;
 	
 	private boolean isUnlimitedFiles;
@@ -223,7 +223,7 @@ public class Controller implements Initializable{
 				 time = Integer.parseInt(this.textTimeOut.getText());
 				 
 				 if (isUnlimitedFiles && (!isTimeOut || time==0)) {
-					 Alert alert = new Alert(AlertType.WARNING, "Are you sure you want unlimited files and no timeout? This can use your disk capacity nad lower its lifespan", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+					 Alert alert = new Alert(AlertType.WARNING, "Are you sure you want unlimited files and no timeout? This can use your disk capacity and lower its lifespan", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
 					 alert.showAndWait();
 					 if (alert.getResult() != ButtonType.YES) {
 						   return;
@@ -250,7 +250,7 @@ public class Controller implements Initializable{
 				 }
 				 
 					//TODO predelat false na promennou, provazat s cheklbvoxem destroy after create
-		         createFileTask = new CreateFileTask(path,isUnlimitedFiles, isTimeOut, isDeleteAfterCreate, countsOfFiles, time, sizeOfFile);
+		         createFileTask = new FileCreateTask(path,isUnlimitedFiles, isTimeOut, isDeleteAfterCreate, countsOfFiles, time, sizeOfFile);
 		         
 		         
 		        // final Instant start = Instant.now();
@@ -263,8 +263,6 @@ public class Controller implements Initializable{
 									timeControlTask.cancel();
 								}
 								setLogError(newMsg);
-								
-								
 								setNodesDiabled(false,nodes);
 								
 							}

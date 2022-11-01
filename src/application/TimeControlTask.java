@@ -2,12 +2,17 @@ package application;
 
 import javafx.concurrent.Task;
 
+
+/**
+ * 
+ * @author Adminator
+ *Simple task which call updateValue every second, to update GUI time
+ */
 public class TimeControlTask extends Task<Integer>{
 
-	public TimeControlTask() {
-		// TODO Auto-generated constructor stub
-	}
-
+	/**
+	 * 
+	 */
 	@Override
 	protected Integer call() throws Exception {
 		int time=0;
@@ -24,25 +29,27 @@ public class TimeControlTask extends Task<Integer>{
 	    }
 	    return time;
 	}
+
+/*//Blob code, here for later usage in class
+ * 
+    @Override 
+    protected void cancelled() {
+        super.cancelled();
+    }
+    
 	
-/*
+
     @Override 
     protected void succeeded() {
         super.succeeded();
         updateMessage("Done!");
-    }*/
-
-    @Override 
-    protected void cancelled() {
-        super.cancelled();
-        System.out.println("StopWatch thread cancelled");
     }
 
- /*
     @Override 
     protected void failed() {
         super.failed();    
         updateMessage("Failed!");
-       }*/
+       }
+ */
 	
 }
