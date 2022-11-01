@@ -21,55 +21,16 @@ import javafx.scene.text.Text;
  * @author Adminator
  *
  */
-public class Main extends Application {
+public class Main {
 	
+
 	/**
-	 * Version of application (seen in main bar)
-	 */
-	private static double version = 0.91;
-	
-	/**
-	 * Main method, using lunch metod from JavaFX to run main JavaFX thread
+	 * Main method, using lunch metod on GUIManager.class from JavaFX to run main JavaFX thread
+	 * (this is made to not need to pass parameters to JVM and due to run .jar only from command line) <-it was not helpful
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		launch(args);
+		Application.launch(GUIManager.class); 
 	}
-
-	@Override
-	/**
-	 * Mandatory method called from JavaFX. Setting up stage. Using .fxml and .css file to style stage. Using icon.
-	 * Setting few of parameters of stage (more in .fxml)
-	 */
-	public void start(Stage stage) throws Exception {
-		System.out.println();
-		
-		System.out.println((this.getClass()));
-		System.out.println((this.getClass().getResource("/resources/application.css")));
-		
-		Parent root = FXMLLoader.load(this.getClass().getResource("/resources/Main.fxml"));
-		
-		Scene scene = new Scene(root);
-		String css = this.getClass().getResource("/resources/application.css").toExternalForm();
-		scene.getStylesheets().add(css);
-		
-		// set icon a hlavni label nazev programu na stage
-		Image icon = new  Image(Main.class.getResourceAsStream("/resources/icon.png")); //nevim proc se muselo delat slozite, ale nejak neslo jinak
-		stage.getIcons().add(icon);
-		stage.setTitle("Unecessary file creator "+version);
-		
-		
-		//Pridani ikony an scenu
-		Image image = new  Image(Main.class.getResourceAsStream("/resources/icon.png")); //nevim proc se muselo delat slozite, ale nejak neslo jinak
-		ImageView imageView = new ImageView(image);
-		imageView.setX(0);
-		imageView.setY(0);
-
-		stage.setResizable(false);
-		stage.setScene(scene);
-		stage.show();
-		
-	}
-	
 
 }

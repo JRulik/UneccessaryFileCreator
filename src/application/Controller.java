@@ -217,11 +217,8 @@ public class Controller implements Initializable{
 						checkBoxTimeOut, checkBoxDeleteAfterCreate);
 				taskService.CreateFileTaskInit();
 				
-				//TODO change to lambda
 				//TODO had to add listener here for interaction with UI (setLogError()/SetLogInfo() <- can be change to past element as parameter to Service constructor)
-				taskService.getFileCreateTask().messageProperty().addListener(new ChangeListener<String>() {
-					@Override
-					public void changed(ObservableValue<? extends String> obs, String oldMsg, String newMsg) {
+				taskService.getFileCreateTask().messageProperty().addListener((ChangeListener<String>) (obs,oldMsg,newMsg)->{
 						if (taskService.getFileCreateTask().isCancelled() || taskService.getFileCreateTask().isDone()) {
 							if (timeControlTask != null && timeControlTask.isRunning()) {
 								timeControlTask.cancel();
@@ -232,13 +229,22 @@ public class Controller implements Initializable{
 						else {
 							setLogInfo(newMsg);
 						}
-					}
 		     });
 				
 				taskService.timeControlTaskInit();
-				//TODO change to lambda
 				//TODO had to add listener here for interaction with UI (labelTime <- can be change to past element as parameter to Service constructor)
-				taskService.getTimeControlTask().valueProperty().addListener(new ChangeListener<Integer>() {
+				taskService.getTimeControlTask().valueProperty().addListener((ChangeListener<Integer>) (list,oldValue,newValue)-> {
+						int hod = newValue/(60*24);
+						int min = (newValue%(60*24))/60;
+						int sec = (newValue%(60*24))%(60);
+						labelTime.setText(String.format("%02d", hod)+ 
+								" : "+ String.format("%02d", min)+
+								" : "+String.format("%02d", sec));	
+		   
+		        });
+				
+				/*//Old Listener by anonymous class implements abstract method (before usage lambda, here for educational purpose
+				 taskService.getTimeControlTask().valueProperty().addListener(new ChangeListener<Integer>() {
 					@Override
 					public void changed(ObservableValue<? extends Integer> list, Integer oldValue, Integer newValue) {
 						
@@ -252,6 +258,7 @@ public class Controller implements Initializable{
 					}
 		   
 		        });
+				 */
 				
 				taskService.runTimeControlTask();
 				taskService.runCreateFileTask();
