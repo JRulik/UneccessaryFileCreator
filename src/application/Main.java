@@ -22,7 +22,7 @@ import javafx.scene.text.Text;
 public class Main extends Application {
 	
 	//version of application
-	private static double version = 0.75;
+	private static double version = 0.76;
 	
 	public static void main(String[] args) {
 		System.out.println("TEST");
