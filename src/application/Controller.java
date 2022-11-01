@@ -25,6 +25,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
@@ -54,6 +55,8 @@ public class Controller implements Initializable{
 	private CheckBox checkBoxUnlimited;
 	@FXML
 	private CheckBox checkBoxTimeOut;
+
+	
 	@FXML
 	private Slider sliderSizeOfFile;
 	@FXML
@@ -63,28 +66,66 @@ public class Controller implements Initializable{
 
 	@FXML
 	private Label labelTime;
+	@FXML
+	private Label labelMB;
+	@FXML
+	private Label labelCountOfFiles;
+	@FXML
+	private Label LabelTimeOut;
+	@FXML
+	private Label labelPath;
+	@FXML
+	private Label labelTimeOutSecond;
+	@FXML
+	private Label labelSizeOfFile;
 	
 	@FXML
 	private ScrollPane scrollPaneTextFlow;
 	
 	@FXML
 	private Button buttonStart;
+	@FXML
+	private Button buttonPlusCountOfFiles;
+	@FXML
+	private Button buttonMinusCountOfFiles;
+	@FXML
+	private Button buttonPlusTimeOut;
+	@FXML
+	private Button buttonMinusTimeOut;
+	@FXML
+	private Button buttonChangePath;
+	@FXML
+	private CheckBox checkBoxDeleteAfterCreate;	
 
-
+	@FXML
+	private Separator separator1;
+	@FXML
+	private Separator separator2;
+	@FXML
+	private Separator separator3;	
+	
 	private CreateFileTask createFileTask;
 	private TimeControlTask timeControlTask;
 	
 	private boolean isUnlimitedFiles;
 	private boolean isTimeOut ;
+	private boolean isDeleteAfterCreate;
 	private long countsOfFiles ;
 	private long time ;
 	private long sizeOfFile ;
 	private Thread createFileThread;
 	private Thread timeControlThread;
+	private Node[] nodes;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		
+		//TODO seems that .setDisable nema vliv na separatory
+		nodes = new Node[]{separator1,separator2,separator3,
+				labelSizeOfFile,labelTimeOutSecond,labelMB,labelCountOfFiles,LabelTimeOut,labelPath,
+				buttonStart,textCountOfFiles,textTimeOut
+				,textSizeOfFile, checkBoxTimeOut, checkBoxUnlimited, textPath,buttonPlusCountOfFiles,
+				buttonMinusCountOfFiles,buttonMinusTimeOut,buttonPlusTimeOut,
+				sliderSizeOfFile,buttonChangePath,checkBoxDeleteAfterCreate};
 				
 	      /*
 	      //Setting the line spacing between the text objects 
@@ -133,16 +174,22 @@ public class Controller implements Initializable{
 		if(timeControlTask != null && timeControlTask.isRunning()) {
 			timeControlTask.cancel();
 		}
-		
+		/*
         buttonStart.setDisable(false);
         textCountOfFiles.setDisable(false);
         textTimeOut.setDisable(false);
         textSizeOfFile.setDisable(false);
         checkBoxTimeOut.setDisable(false);
         checkBoxUnlimited.setDisable(false);
-        textPath.setDisable(false);
-        
+        textPath.setDisable(false);*/
+		setNodesDiabled(false,nodes);
 		
+	}
+	
+	public void setNodesDiabled(boolean disable, Node[] nodes) {
+	    for(Node node : nodes) {
+	        node.setDisable(disable);
+	    }
 	}
 	
 	public void start(ActionEvent event) {
@@ -172,6 +219,7 @@ public class Controller implements Initializable{
 			try{
 				 isUnlimitedFiles = this.checkBoxUnlimited.isSelected();
 				 isTimeOut = this.checkBoxTimeOut.isSelected();
+				 isDeleteAfterCreate = this.checkBoxDeleteAfterCreate.isSelected();
 				 time = Integer.parseInt(this.textTimeOut.getText());
 				 
 				 if (isUnlimitedFiles && (!isTimeOut || time==0)) {
@@ -202,7 +250,7 @@ public class Controller implements Initializable{
 				 }
 				 
 					//TODO predelat false na promennou, provazat s cheklbvoxem destroy after create
-		         createFileTask = new CreateFileTask(path,isUnlimitedFiles, isTimeOut, false, countsOfFiles, time, sizeOfFile);
+		         createFileTask = new CreateFileTask(path,isUnlimitedFiles, isTimeOut, isDeleteAfterCreate, countsOfFiles, time, sizeOfFile);
 		         
 		         
 		        // final Instant start = Instant.now();
@@ -216,13 +264,8 @@ public class Controller implements Initializable{
 								}
 								setLogError(newMsg);
 								
-						        buttonStart.setDisable(false);
-						        textCountOfFiles.setDisable(false);
-						        textTimeOut.setDisable(false);
-						        textSizeOfFile.setDisable(false);
-						        checkBoxTimeOut.setDisable(false);
-						        checkBoxUnlimited.setDisable(false);
-						        textPath.setDisable(false);
+								
+								setNodesDiabled(false,nodes);
 								
 							}
 							else {
@@ -268,16 +311,9 @@ public class Controller implements Initializable{
 		         //start = Instant.now();
 		         timeControlThread.start();
 		         
-		         buttonStart.setDisable(true);
-		         textCountOfFiles.setDisable(true);
-		         textTimeOut.setDisable(true);
-		         textSizeOfFile.setDisable(true);
-		         checkBoxTimeOut.setDisable(true);
-		         checkBoxUnlimited.setDisable(true);
-		         textPath.setDisable(true);
+		 		setNodesDiabled(true,nodes);
+					
 		         
-		         
-				 
 			}
 			catch(Exception e) {
 				setLogError("One of parameters is wrong!");

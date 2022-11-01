@@ -67,11 +67,17 @@ public class CreateFileTask extends Task<Long>{
 		for (i=0; i< countOfFiles; i++){
 			//start = Instant.now();
 			long numberOfFile = i+1;
-			createFile(Long.toString(numberOfFile)+"-TestFile", sizeOfFile*1024);
+			File file = createFile(Long.toString(numberOfFile)+"-TestFile", sizeOfFile*1024);
 			//stop = Instant.now();
 			//TODO -> nekdy vraci nulu, nekdy cas + nastaveny sleeptim?
 			//updateMessage( Long.toString(i)+"# file created"+" ["+(double) Duration.between(start, stop).toNanos()/(double) 1000+" ms]");
-			updateMessage( "["+java.time.LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS"))+"] - " + Long.toString(numberOfFile)+"# file created");
+			String msg;
+			msg = "["+java.time.LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS"))+"] - " + Long.toString(numberOfFile)+"# file created";
+			if (isDestroyAfterCreate) {
+				file.delete();
+				msg+="\n"+"["+java.time.LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS"))+"] - " + Long.toString(numberOfFile)+"# file deleted";
+			}
+			updateMessage(msg);
 			
 			//updateValue(i);
 			System.out.println(i);

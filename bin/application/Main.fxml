@@ -15,7 +15,7 @@
 
 <AnchorPane fx:id="anchorPane" maxHeight="467.0" maxWidth="457.0" minHeight="368.0" minWidth="444.0" prefHeight="467.0" prefWidth="446.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
    <children>
-      <Slider fx:id="sliderSizeOfFile" blockIncrement="100.0" layoutX="14.0" layoutY="66.0" majorTickUnit="1000.0" max="5000.0" minorTickCount="5" nodeOrientation="RIGHT_TO_LEFT" orientation="VERTICAL" prefHeight="394.0" prefWidth="50.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" styleClass="sliderSizeOfFile" value="100.0" />
+      <Slider fx:id="sliderSizeOfFile" blockIncrement="100.0" layoutX="14.0" layoutY="71.0" majorTickUnit="1000.0" max="5000.0" minorTickCount="5" nodeOrientation="RIGHT_TO_LEFT" orientation="VERTICAL" prefHeight="389.0" prefWidth="50.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" styleClass="sliderSizeOfFile" value="100.0" />
       <Button fx:id="buttonStart" layoutX="77.0" layoutY="298.0" mnemonicParsing="false" onAction="#start" prefHeight="25.0" prefWidth="95.0" text="START" />
       <TextField fx:id="textSizeOfFile" layoutX="77.0" layoutY="89.0" prefHeight="32.0" prefWidth="109.0" text="100" />
       <Label fx:id="labelSizeOfFile" layoutX="77.0" layoutY="68.0" prefHeight="17.0" prefWidth="149.0" text="Size of file" />
@@ -28,7 +28,7 @@
       </Button>
       <TextField fx:id="textPath" layoutX="77.0" layoutY="259.0" prefHeight="25.0" prefWidth="278.0" />
       <Label fx:id="labelPath" layoutX="77.0" layoutY="238.0" prefHeight="17.0" prefWidth="149.0" text="Output path" />
-      <Button fx:id="buttonChangePath" layoutX="354.0" layoutY="257.0" mnemonicParsing="false" onAction="#changeDirectory" prefHeight="25.0" prefWidth="70.0" text="Change..." />
+      <Button fx:id="buttonChangePath" layoutX="354.0" layoutY="259.0" mnemonicParsing="false" onAction="#changeDirectory" prefHeight="25.0" prefWidth="70.0" text="Change..." />
       <Label fx:id="labelMB" layoutX="186.0" layoutY="89.0" prefHeight="34.0" prefWidth="34.0" text="MB">
          <font>
             <Font size="20.0" />
@@ -57,7 +57,7 @@
             <Font size="7.0" />
          </font>
       </Button>
-      <Label layoutX="310.0" layoutY="175.0" prefHeight="30.0" prefWidth="14.0" text="s">
+      <Label fx:id="labelTimeOutSecond" layoutX="310.0" layoutY="175.0" prefHeight="30.0" prefWidth="14.0" text="s">
          <font>
             <Font size="20.0" />
          </font>
@@ -78,9 +78,9 @@
             <TextFlow fx:id="textAreaLog" layoutX="77.0" prefHeight="125.0" prefWidth="359.0" styleClass="textAreaLog leftAlign" />
          </content>
       </ScrollPane>
-      <Separator layoutX="77.0" layoutY="131.0" opacity="0.25" prefHeight="3.0" prefWidth="361.0" styleClass="separator leftAlign" />
-      <Separator layoutX="77.0" layoutY="237.0" opacity="0.25" prefHeight="3.0" prefWidth="361.0" styleClass="separator leftAlign" />
-      <Separator layoutX="77.0" layoutY="290.0" opacity="0.25" prefHeight="3.0" prefWidth="361.0" styleClass="separator leftAlign" />
-      <CheckBox layoutX="77.0" layoutY="216.0" mnemonicParsing="false" text="Delete file after create" />
+      <Separator fx:id="separator1" layoutX="77.0" layoutY="131.0" opacity="0.25" prefHeight="3.0" prefWidth="361.0" styleClass="separator leftAlign" />
+      <Separator fx:id="separator2" layoutX="77.0" layoutY="237.0" opacity="0.25" prefHeight="3.0" prefWidth="361.0" styleClass="separator leftAlign" />
+      <Separator fx:id="separator3" layoutX="77.0" layoutY="290.0" opacity="0.25" prefHeight="3.0" prefWidth="361.0" styleClass="separator leftAlign" />
+      <CheckBox fx:id="checkBoxDeleteAfterCreate" layoutX="77.0" layoutY="216.0" mnemonicParsing="false" text="Delete file after create" />
    </children>
 </AnchorPane>
