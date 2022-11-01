@@ -2,7 +2,7 @@ package application;
 	
 
 
-//import java.awt.Image;
+import resources.*;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -24,7 +24,7 @@ public class Main extends Application {
 	/**
 	 * Version of application (seen in main bar)
 	 */
-	private static double version = 0.76;
+	private static double version = 0.86;
 	
 	/**
 	 * Main method, using lunch metod from JavaFX to run main JavaFX thread
@@ -41,21 +41,24 @@ public class Main extends Application {
 	 */
 	public void start(Stage stage) throws Exception {
 		System.out.println();
-		System.out.println(getClass());
-		Parent root = FXMLLoader.load(this.getClass().getResource("Main.fxml"));
+		
+		System.out.println((this.getClass()));
+		System.out.println((this.getClass().getResource("/resources/application.css")));
+		
+		Parent root = FXMLLoader.load(this.getClass().getResource("/resources/Main.fxml"));
 		
 		Scene scene = new Scene(root);
-		String css = this.getClass().getResource("application.css").toExternalForm();
+		String css = this.getClass().getResource("/resources/application.css").toExternalForm();
 		scene.getStylesheets().add(css);
 		
 		//------------------------------------------------------------------------------------------------- set icon a hlavni label nazev programu na stage
-		Image icon = new  Image(Main.class.getResourceAsStream("icon.png")); //nevim proc se muselo delat slozite, ale nejak neslo jinak
+		Image icon = new  Image(Main.class.getResourceAsStream("/resources/icon.png")); //nevim proc se muselo delat slozite, ale nejak neslo jinak
 		stage.getIcons().add(icon);
 		stage.setTitle("Unecessary file creator "+version);
 		
 		
 		//------------------------------------------------------------------------------------------------- Pridani ikony an scenu
-		Image image = new  Image(Main.class.getResourceAsStream("icon.png")); //nevim proc se muselo delat slozite, ale nejak neslo jinak
+		Image image = new  Image(Main.class.getResourceAsStream("/resources/icon.png")); //nevim proc se muselo delat slozite, ale nejak neslo jinak
 		ImageView imageView = new ImageView(image);
 		imageView.setX(0);
 		imageView.setY(0);

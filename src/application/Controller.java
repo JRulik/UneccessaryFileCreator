@@ -40,9 +40,22 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import tasks.FileCreateTask;
+import tasks.TaskService;
+import tasks.TimeControlTask;
 
+
+/**
+ * Main controller of application. Between threads and UI
+ * @author Adminator
+ *
+ */
 public class Controller implements Initializable{
-
+	
+	/**
+	 * FXML components load as object (semiautomatically by @FXML and given name)
+	 * (...if there would be better option to load that)
+	 */
 	@FXML //<- FXML loader nahraje .fxml soubor i sem a zde uz muzu pracovat s classou, ktera se jmenuje stejne jako id nastaveny necemu pres scene builder
 	private TextField textTimeOut;
 	@FXML
@@ -55,15 +68,8 @@ public class Controller implements Initializable{
 	private CheckBox checkBoxUnlimited;
 	@FXML
 	private CheckBox checkBoxTimeOut;
-
-	
 	@FXML
-	private Slider sliderSizeOfFile;
-	@FXML
-	private AnchorPane anchorPane;
-	@FXML
-	private TextFlow textAreaLog;
-
+	private CheckBox checkBoxDeleteAfterCreate;	
 	@FXML
 	private Label labelTime;
 	@FXML
@@ -78,10 +84,6 @@ public class Controller implements Initializable{
 	private Label labelTimeOutSecond;
 	@FXML
 	private Label labelSizeOfFile;
-	
-	@FXML
-	private ScrollPane scrollPaneTextFlow;
-	
 	@FXML
 	private Button buttonStart;
 	@FXML
@@ -95,8 +97,13 @@ public class Controller implements Initializable{
 	@FXML
 	private Button buttonChangePath;
 	@FXML
-	private CheckBox checkBoxDeleteAfterCreate;	
-
+	private Slider sliderSizeOfFile;
+	@FXML
+	private ScrollPane scrollPaneTextFlow;
+	@FXML
+	private AnchorPane anchorPane;
+	@FXML
+	private TextFlow textAreaLog;
 	@FXML
 	private Separator separator1;
 	@FXML
@@ -104,21 +111,30 @@ public class Controller implements Initializable{
 	@FXML
 	private Separator separator3;	
 	
-	private FileCreateTask createFileTask;
-	private TimeControlTask timeControlTask;
-	
+	/**
+	 * private variables to save values from UI
+	 */
 	private boolean isUnlimitedFiles;
 	private boolean isTimeOut ;
 	private boolean isDeleteAfterCreate;
 	private long countsOfFiles ;
 	private long time ;
 	private long sizeOfFile ;
+	
+	/**
+	 * Task and thread variables to save them out of methods
+	 */
+	private FileCreateTask createFileTask;
+	private TimeControlTask timeControlTask;
 	private Thread createFileThread;
 	private Thread timeControlThread;
 	private Node[] nodes;
 	
+	private TaskService taskService;
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		
 		//TODO seems that .setDisable nema vliv na separatory
 		nodes = new Node[]{separator1,separator2,separator3,
 				labelSizeOfFile,labelTimeOutSecond,labelMB,labelCountOfFiles,LabelTimeOut,labelPath,
@@ -126,21 +142,9 @@ public class Controller implements Initializable{
 				,textSizeOfFile, checkBoxTimeOut, checkBoxUnlimited, textPath,buttonPlusCountOfFiles,
 				buttonMinusCountOfFiles,buttonMinusTimeOut,buttonPlusTimeOut,
 				sliderSizeOfFile,buttonChangePath,checkBoxDeleteAfterCreate};
-				
-	      /*
-	      //Setting the line spacing between the text objects 
-		textAreaLog.setTextAlignment(TextAlignment.JUSTIFY); 
-	       
-	      //Setting the width  
-		textAreaLog.setPrefSize(600, 300); 
-	       
-	      //Setting the line spacing  
-		textAreaLog.setLineSpacing(5.0); 
-		*/
-		//textAreaLog.setBackground(null); //delam v css
 		
-		textAreaLog.getChildren().addListener(
-                (ListChangeListener<Node>) ((change) -> {
+		//listener to make textArea scroll when update
+		textAreaLog.getChildren().addListener((ListChangeListener<Node>) ((change) -> { 
                 	textAreaLog.layout();
                     scrollPaneTextFlow.layout();
                     scrollPaneTextFlow.setVvalue(1.0f);
@@ -148,7 +152,6 @@ public class Controller implements Initializable{
 		
 		sliderSizeOfFile.setBlockIncrement(100);
 		
-		//TODO Slider which snap to ticks on drag
 		//TODO change this lambda expresion, maybe with :: operator and new method
 		sliderSizeOfFile.valueProperty().addListener(new ChangeListener<Number>() {
 						@Override
@@ -161,135 +164,80 @@ public class Controller implements Initializable{
 				});
 		sliderSizeOfFile.setValue(Integer.parseInt(textSizeOfFile.getText()));
 		
-		//sliderSizeOfFile
-		textPath.setText(System.getProperty("user.dir"));
+		//set path to application as default path 
+		textPath.setText(System.getProperty("user.dir")); 
 		
 	}
 	
-
-	public void stop(ActionEvent event) {
-		if(createFileTask != null && createFileTask.isRunning()) {
-			createFileTask.cancel();
-		}
-		if(timeControlTask != null && timeControlTask.isRunning()) {
-			timeControlTask.cancel();
-		}
-		/*
-        buttonStart.setDisable(false);
-        textCountOfFiles.setDisable(false);
-        textTimeOut.setDisable(false);
-        textSizeOfFile.setDisable(false);
-        checkBoxTimeOut.setDisable(false);
-        checkBoxUnlimited.setDisable(false);
-        textPath.setDisable(false);*/
-		setNodesDiabled(false,nodes);
-		
-	}
 	
+	/**
+	 * Disable (or enable) every node in given nodes array on UI
+	 * @param disable if true, disable nodes. If false, enable nodes
+	 * @param nodes array of nodes to change their disability
+	 */
 	public void setNodesDiabled(boolean disable, Node[] nodes) {
 	    for(Node node : nodes) {
 	        node.setDisable(disable);
 	    }
 	}
 	
+	/**
+	 * Callback method on event on pressing Stop button
+	 * @param event
+	 */
+	public void stop(ActionEvent event) {
+		//stopTasks();	
+		taskService.stopTasks();
+		//set disabled nodes in []nodes enable
+		setNodesDiabled(false,nodes);
+	}
+	
+	
+	/**
+	 * "Main" method - on clicking on Start button load values from UI 
+	 * and start FileCreate and TimeControl Tasks.
+	 * @param event
+	 */
 	public void start(ActionEvent event) {
 		
-
-		
-		if (createFileTask != null && createFileTask.isRunning()) {
-			/*
-			System.out.println("Running");
-			return;
-			*/
-			createFileTask.cancel();
+		//Stop tasks before init news
+		if (taskService != null) {
+			taskService.stopTasks();
 		}
 		
-		if (timeControlTask != null && timeControlTask.isRunning()) {
-			timeControlTask.cancel();
-		}
-		
-		//Vycisti log areu
+		//Clear logArea and set Time clock
 		textAreaLog.getChildren().clear();
 		labelTime.setText("00 : 00 : 00");
 		
 		String path = textPath.getText();
 		if(new File(path).exists()) {
-			
-			//hlavni cyklus START
+			//try-catch used for incorrect inputs in UI fields (parsed in fileCreateTaskInit())
 			try{
-				 isUnlimitedFiles = this.checkBoxUnlimited.isSelected();
-				 isTimeOut = this.checkBoxTimeOut.isSelected();
-				 isDeleteAfterCreate = this.checkBoxDeleteAfterCreate.isSelected();
-				 time = Integer.parseInt(this.textTimeOut.getText());
-				 
-				 if (isUnlimitedFiles && (!isTimeOut || time==0)) {
-					 Alert alert = new Alert(AlertType.WARNING, "Are you sure you want unlimited files and no timeout? This can use your disk capacity and lower its lifespan", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
-					 alert.showAndWait();
-					 if (alert.getResult() != ButtonType.YES) {
-						   return;
-						}
-				 }
-				 
-				 
-				 //osetreni vstupu, pokud tam je nekonecno
-				 if (this.textCountOfFiles.getText().equals("∞")) {			 
-					 countsOfFiles = 0; //<- check na nekonecno se dela ve vlakne createTask s isUnlimited, tato hodnota je jedno pak
-					 isUnlimitedFiles = true;
-				 }
-				 else {
-					 countsOfFiles = Integer.parseInt(this.textCountOfFiles.getText());
-				 }
-				 
-				 
-				 
-				 
-				 sizeOfFile = Long.parseLong(this.textSizeOfFile.getText());
-				 
-				 if(countsOfFiles<0 || time<0 || sizeOfFile<0) {
-					 throw new Exception();
-				 }
-				 
-					//TODO predelat false na promennou, provazat s cheklbvoxem destroy after create
-		         createFileTask = new FileCreateTask(path,isUnlimitedFiles, isTimeOut, isDeleteAfterCreate, countsOfFiles, time, sizeOfFile);
-		         
-		         
-		        // final Instant start = Instant.now();
-		         createFileTask.messageProperty().addListener(new ChangeListener<String>() {
-						@Override
-						public void changed(ObservableValue<? extends String> obs, String oldMsg, String newMsg) {
-									
-							if (createFileTask.isCancelled() || createFileTask.isDone()) {
-								if (timeControlTask != null && timeControlTask.isRunning()) {
-									timeControlTask.cancel();
-								}
-								setLogError(newMsg);
-								setNodesDiabled(false,nodes);
-								
+				taskService = new TaskService(textTimeOut, textCountOfFiles, textSizeOfFile, textPath, checkBoxUnlimited,
+						checkBoxTimeOut, checkBoxDeleteAfterCreate);
+				taskService.CreateFileTaskInit();
+				
+				//TODO change to lambda
+				//had to add listener here for interaction with UI (can be change to past as parameter)
+				taskService.getFileCreateTask().messageProperty().addListener(new ChangeListener<String>() {
+					@Override
+					public void changed(ObservableValue<? extends String> obs, String oldMsg, String newMsg) {
+						if (taskService.getFileCreateTask().isCancelled() || taskService.getFileCreateTask().isDone()) {
+							if (timeControlTask != null && timeControlTask.isRunning()) {
+								timeControlTask.cancel();
 							}
-							else {
-								setLogInfo(newMsg);
-							}
+							setLogError(newMsg);
+							setNodesDiabled(false,nodes);
 						}
-				});		         
-		         
-		         createFileThread = new Thread (createFileTask);
-		         createFileThread.setDaemon(true);
-		         //start = Instant.now();
-		         createFileThread.start();
-		         
-		         
-		         
-		 		if (timeControlTask != null && timeControlTask.isRunning()) {
-					/*
-					System.out.println("Running");
-					return;
-					*/
-		 			timeControlTask.cancel();
-				}
-		         
-		         timeControlTask = new TimeControlTask();	         
-		         timeControlTask.valueProperty().addListener(new ChangeListener<Integer>() {
-
+						else {
+							setLogInfo(newMsg);
+						}
+					}
+		     });
+				
+				taskService.timeControlTaskInit();
+				//TODO change to lambda
+				taskService.getTimeControlTask().valueProperty().addListener(new ChangeListener<Integer>() {
 					@Override
 					public void changed(ObservableValue<? extends Integer> list, Integer oldValue, Integer newValue) {
 						
@@ -301,51 +249,46 @@ public class Controller implements Initializable{
 								" : "+ String.format("%02d", min)+
 								" : "+String.format("%02d", sec));	
 					}
-		    
-		         });
-		         
-		         timeControlThread = new Thread (timeControlTask);
-		         timeControlThread.setDaemon(true);
-		         //start = Instant.now();
-		         timeControlThread.start();
-		         
-		 		setNodesDiabled(true,nodes);
-					
-		         
+		   
+		        });
+				
+				taskService.runTimeControlTask();
+				taskService.runCreateFileTask();
+		 		setNodesDiabled(true,nodes);  
 			}
 			catch(Exception e) {
-				setLogError("One of parameters is wrong!");
+				if (e.getMessage().equals("Start declined")) {
+					//do nothing, avoid starting thread
+				}
+				else {
+					setLogError("One of parameters is wrong!"); //probably
+				}
 			}          	           
 		}
 		else{
 			setLogError(" Given folder does not exist! "+textPath.getText() +"\n");
 		}
-		
-		
-		
-		
 	}
 
-	
+	/**
+	 * Write Info text in textArea (black,not bold)
+	 * @param msg
+	 */
 	public void setLogInfo(String msg) {
-		//String text = textAreaLog.getText();
 		Text text = new Text(msg+"\n");
-		//text.setFill(Color.RED);
 		text.setStyle("-fx-fill: #000000;");
-		//text.setFont(Font.font("Calibri", FontPosture.REGULAR, 16));
 		textAreaLog.getChildren().add(text);
-		//textAreaLog.setStyle("-fx-text-fill: red ;") ;
 	}
 	
+	/**
+	 * Write Error text in textArea (red,bold)
+	 * @param msg
+	 */
 	public void setLogError(String msg) {
-		//String text = textAreaLog.getText();
 		Text text = new Text(msg+"\n");
-		//text.setFill(Color.RED);
 		text.setStyle("-fx-fill: #EE4B2B;"
 					+ "-fx-font-weight:bold;");
-		//text.setFont(Font.font("Calibri", FontPosture.REGULAR, 16));
 		textAreaLog.getChildren().add(text);
-		//textAreaLog.setStyle("-fx-text-fill: red ;") ;
 	}
 
 
@@ -378,6 +321,11 @@ public class Controller implements Initializable{
 		System.out.println("Butt1");
 	}*/
 	
+	
+	/**
+	 * Listener for "+ count of files" Button. Change text count of files on oldValue+1
+	 * @param event
+	 */
 	public void countOfFilesPlus(ActionEvent event) {
 	
 		if (!this.checkBoxUnlimited.isSelected()) {
@@ -397,8 +345,11 @@ public class Controller implements Initializable{
 		
 	}
 	
+	/**
+	 * Listener for "- count of files" Button. Change text count of files on oldValue-1
+	 * @param event
+	 */	
 	public void countOfFilesMinus(ActionEvent event) {
-		
 		if (!this.checkBoxUnlimited.isSelected()) {
 			try {
 				int count = Integer.parseInt(textCountOfFiles.getText());
@@ -416,6 +367,11 @@ public class Controller implements Initializable{
 		}
 	}
 	
+	
+	/**
+	 * Listener for "+ time out" Button. Change text timeout on oldValue+1
+	 * @param event
+	 */	
 	public void timeOutPlus(ActionEvent event) {
 	
 		if (this.checkBoxTimeOut.isSelected()) {
@@ -434,6 +390,10 @@ public class Controller implements Initializable{
 		
 	}
 	
+	/**
+	 * Listener for "- time out" Button. Change text timeout on oldValue-1
+	 * @param event
+	 */		
 	public void timeOutMinus(ActionEvent event) {
 		
 		if (this.checkBoxTimeOut.isSelected()) {
@@ -453,6 +413,11 @@ public class Controller implements Initializable{
 		}
 	}
 	
+	
+	/**
+	 * Liestener for checkBoxUnlimited. Set UI textCountOfFiles styles
+	 * @param event
+	 */
 	public void unlimitedOnOff(ActionEvent event) {	
 		if ( this.checkBoxUnlimited.isSelected()) {
 			textCountOfFiles.setEditable(false);
@@ -468,7 +433,11 @@ public class Controller implements Initializable{
 			textCountOfFiles.getStyleClass().add("enabled");
 		}
 	}
-	
+
+	/**
+	 * Liestener for checkBoxtimeOutOnOff. Set UI textTimeOut styles
+	 * @param event
+	 */
 	public void timeOutOnOff(ActionEvent event) {
 		textTimeOut.getStyleClass().remove("textTimeOut");
 		if (!this.checkBoxTimeOut.isSelected()) {
@@ -480,7 +449,6 @@ public class Controller implements Initializable{
 		}
 		else {
 			textTimeOut.setEditable(true);
-			//textTimeOut.setText("0");
 			textTimeOut.getStyleClass().remove("disabled");
 			textTimeOut.getStyleClass().add("enabled");
 		}

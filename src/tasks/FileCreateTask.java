@@ -1,4 +1,4 @@
-package application;
+package tasks;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,9 +28,11 @@ public class FileCreateTask extends Task<Long>{
 	private final long sizeOfFile;
 	private final String path;
 	
+	
 	/**
 	 * Constant value to wait between create file (and update message) -> without some constant, if thread was cancelled 
-	 * (and set no timeout between files), message can show mismash on textArea.
+	 * (and set no timeout between files), message can show mismash on textArea (seems like messages stuck
+	 * after each other and then info message+ last error message is shown at once (with error color)
 	 * time in ms
 	 */
 	private final int threadSleepConstant = 15;
@@ -110,8 +112,8 @@ public class FileCreateTask extends Task<Long>{
 				msg+="\n"+"["+java.time.LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS"))+"] - " + Long.toString(numberOfFile)+"# file - deleted";
 			}
 			//update message
-			Thread.sleep(threadSleepConstant);
 			updateMessage(msg);
+			Thread.sleep(threadSleepConstant);
 			
 			//check if it was last file to create. If yes, break loop (and end of thread)
 			if (numberOfFile==countOfFiles) {

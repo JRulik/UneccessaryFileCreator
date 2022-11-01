@@ -1,4 +1,4 @@
-package application;
+package tasks;
 
 import javafx.concurrent.Task;
 
