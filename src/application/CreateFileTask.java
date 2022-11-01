@@ -3,19 +3,22 @@ package application;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 
 import javafx.concurrent.Task;
 
 public class CreateFileTask extends Task<Long>{
 
 
-	private boolean isUnlimitedFiles;
-	private boolean isTimeOut; 
-	private boolean isDestroyAfterCreate;
-	private long countOfFiles;
-	private long time;
-	private long sizeOfFile;
-	private String path;
+	private final boolean isUnlimitedFiles;
+	private final boolean isTimeOut; 
+	private final boolean isDestroyAfterCreate;
+	private final long countOfFiles;
+	private final long time;
+	private final long sizeOfFile;
+	private final String path;
 	
 	public CreateFileTask(String path, boolean isUnlimitedFiles, boolean isTimeOut, boolean isDestroyAfterCreate,
 		long countOfFiles, long time, long sizeOfFile) {
@@ -53,30 +56,61 @@ public class CreateFileTask extends Task<Long>{
 		}
 		
 		long i;
-		for (i=1; i< countOfFiles+1; i++){
-			createFile(Long.toString(i)+"-TestFile", sizeOfFile*1024);
-			updateMessage(Long.toString(i)+"# file created");
+		Instant start,stop;
+		for (i=0; i< countOfFiles; i++){
+			//start = Instant.now();
+			long numberOfFile = i+1;
+			createFile(Long.toString(numberOfFile)+"-TestFile", sizeOfFile*1024);
+			//stop = Instant.now();
+			//TODO -> nekdy vraci nulu, nekdy cas + nastaveny sleeptim?
+			//updateMessage( Long.toString(i)+"# file created"+" ["+(double) Duration.between(start, stop).toNanos()/(double) 1000+" ms]");
+			updateMessage( "["+java.time.LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS"))+"] - " + Long.toString(numberOfFile)+"# file created");
+			
 			//updateValue(i);
 			System.out.println(i);
 			
+			if (numberOfFile==countOfFiles) {
+				break;
+			}
+			
             try {
-            	Thread.sleep(5+sleepTime*1000);
+            
+            	Thread.sleep(1+sleepTime*1000);
             } catch (InterruptedException interrupted) {
             	/*
                 if (isCancelled()) {
                     updateMessage("Cancelled");
                     break;
                 }*/
-            }
+	        }
+            
             if (isCancelled()) {
-                updateMessage("Cancelled");
                 break;
             }
-		}
-        
-        return (long)0;
-	}
 
+		}
+		//Nelze tady pouzit -> updatne massage driv nez se puvodni propsie do textArea
+		//updateMessage("Finished");
+        return i;
+	}
+	
+    @Override 
+    protected void succeeded() {
+        super.succeeded();
+        updateMessage("Done!");
+    }
+
+    @Override 
+    protected void cancelled() {
+        super.cancelled();
+        updateMessage("Cancelled!");
+    }
+
+    @Override 
+    protected void failed() {
+        super.failed();    
+        updateMessage("Failed!");
+       }
 
 
 

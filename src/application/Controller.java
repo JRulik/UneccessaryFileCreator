@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.URL;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ResourceBundle;
 
 import javafx.beans.InvalidationListener;
@@ -56,11 +58,15 @@ public class Controller implements Initializable{
 	private TextFlow textAreaLog;
 
 	@FXML
+	private Label labelTime;
+	
+	@FXML
 	private ScrollPane scrollPaneTextFlow;
 	
 
 
 	private CreateFileTask createFileTask;
+	private TimeControlTask timeControlTask;
 	
 	private boolean isUnlimitedFiles;
 	private boolean isTimeOut ;
@@ -68,7 +74,7 @@ public class Controller implements Initializable{
 	private long time ;
 	private long sizeOfFile ;
 	private Thread createFileThread;
-	private Thread createTimeThread;
+	private Thread timeControlThread;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -118,12 +124,30 @@ public class Controller implements Initializable{
 		if(createFileTask.isRunning()) {
 			createFileTask.cancel();
 		}
+		if(timeControlTask.isRunning()) {
+			timeControlTask.cancel();
+		}
 	}
 	
 	public void start(ActionEvent event) {
 		
+
+		
+		if (createFileTask != null && createFileTask.isRunning()) {
+			/*
+			System.out.println("Running");
+			return;
+			*/
+			createFileTask.cancel();
+		}
+		
+		if (timeControlTask != null && timeControlTask.isRunning()) {
+			timeControlTask.cancel();
+		}
+		
 		//Vycisti log areu
 		textAreaLog.getChildren().clear();
+		labelTime.setText("00 : 00 : 00");
 		
 		String path = textPath.getText();
 		if(new File(path).exists()) {
@@ -143,18 +167,63 @@ public class Controller implements Initializable{
 					//TODO predelat false na promennou, provazat s cheklbvoxem destroy after create
 		         createFileTask = new CreateFileTask(path,isUnlimitedFiles, isTimeOut, false, countsOfFiles, time, sizeOfFile);
 		         
+		         
+		        // final Instant start = Instant.now();
 		         createFileTask.messageProperty().addListener(new ChangeListener<String>() {
 						@Override
 						public void changed(ObservableValue<? extends String> obs, String oldMsg, String newMsg) {
-							setLogInfo(newMsg);	
+									
+							if (createFileTask.isCancelled()) {
+								setLogError("Cancelled!");
+							}
+							else if (createFileTask.isDone()){
+								setLogInfo("Done!");
+								if (timeControlTask != null && timeControlTask.isRunning()) {
+									timeControlTask.cancel();
+								}
+							}
+							else {
+								setLogInfo(newMsg);
+							}
 						}
-				});
-		         
+				});		         
 		         
 		         createFileThread = new Thread (createFileTask);
 		         createFileThread.setDaemon(true);
+		         //start = Instant.now();
 		         createFileThread.start();
 		         
+		         
+		         
+		 		if (timeControlTask != null && timeControlTask.isRunning()) {
+					/*
+					System.out.println("Running");
+					return;
+					*/
+		 			timeControlTask.cancel();
+				}
+		         
+		         timeControlTask = new TimeControlTask();	         
+		         timeControlTask.valueProperty().addListener(new ChangeListener<Integer>() {
+
+					@Override
+					public void changed(ObservableValue<? extends Integer> list, Integer oldValue, Integer newValue) {
+						
+						int hod = newValue/(60*24);
+						int min = (newValue%(60*24))/60;
+						int sec = (newValue%(60*24))%(60);
+						
+						labelTime.setText(String.format("%02d", hod)+ 
+								" : "+ String.format("%02d", min)+
+								" : "+String.format("%02d", sec));	
+					}
+		    
+		         });
+		         
+		         timeControlThread = new Thread (timeControlTask);
+		         timeControlThread.setDaemon(true);
+		         //start = Instant.now();
+		         timeControlThread.start();
 				 
 			}
 			catch(Exception e) {
@@ -164,6 +233,9 @@ public class Controller implements Initializable{
 		else{
 			setLogError(" Given folder does not exist! "+textPath.getText() +"\n");
 		}
+		
+		
+		
 		
 	}
 
