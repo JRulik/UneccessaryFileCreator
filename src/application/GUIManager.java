@@ -29,7 +29,7 @@ public class GUIManager extends Application {
 		// set icon a hlavni label nazev programu na stage
 		Image icon = new  Image(Main.class.getResourceAsStream("/resources/icon.png")); //nevim proc se muselo delat slozite, ale nejak neslo jinak
 		stage.getIcons().add(icon);
-		stage.setTitle("Unecessary file creator "+version);
+		stage.setTitle("Uneccessary file creator "+version);
 		
 		
 		//Pridani ikony an scenu
