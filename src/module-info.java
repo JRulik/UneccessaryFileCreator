@@ -1,4 +1,4 @@
-module SimTestFx {
+module uneccessaryFileCreator {
 	requires javafx.controls;
 	requires java.desktop;
 	requires javafx.graphics;
