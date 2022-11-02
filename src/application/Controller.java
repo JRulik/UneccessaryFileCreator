@@ -220,8 +220,8 @@ public class Controller implements Initializable{
 				//TODO had to add listener here for interaction with UI (setLogError()/SetLogInfo() <- can be change to past element as parameter to Service constructor)
 				taskService.getFileCreateTask().messageProperty().addListener((ChangeListener<String>) (obs,oldMsg,newMsg)->{
 						if (taskService.getFileCreateTask().isCancelled() || taskService.getFileCreateTask().isDone()) {
-							if (timeControlTask != null && timeControlTask.isRunning()) {
-								timeControlTask.cancel();
+							if (taskService.getTimeControlTask() != null && taskService.getTimeControlTask().isRunning()) {
+								taskService.stopTasks();
 							}
 							setLogError(newMsg);
 							setNodesDiabled(false,nodes);
