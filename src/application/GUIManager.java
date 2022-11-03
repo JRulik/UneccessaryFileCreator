@@ -14,6 +14,11 @@ public class GUIManager extends Application {
 	 */
 	private static double version = 0.92;
 	
+	public static void main(String[] args) {
+		launch(); 
+	}
+
+	
 	@Override
 	/**
 	 * Mandatory method called from JavaFX. Setting up stage. Using .fxml and .css file to style stage. Using icon.

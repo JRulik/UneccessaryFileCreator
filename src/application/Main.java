@@ -28,7 +28,7 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Application.launch(GUIManager.class); 
+		GUIManager.main(args);
 	}
 
 }
