@@ -187,7 +187,9 @@ public class Controller implements Initializable{
 	 */
 	public void stop(ActionEvent event) {
 		//stopTasks();	
-		taskService.stopTasks();
+		if (taskService != null) {
+			taskService.stopTasks();
+		}
 		//set disabled nodes in []nodes enable
 		setNodesDiabled(false,nodes);
 	}
