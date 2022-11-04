@@ -1,6 +1,10 @@
 -Spent 2-3 days to try to deploy it with maven and jlink and jpackage (everything is brand new for me). Haven´t been successful. With command mvn javafx:jlink jpackage:jpackage it create hopefully standalone app in folder. 
 but output of jpackage isn´t working. Maybe will try maven shade for compiling into .jar sometimes. If someone would know, where is error (probably somewhere in .pom file) I will be happy for any suggestion.
 
+for run in IDE:
+downloads JavaFx libraries and set VM variables (example for eclipse here: https://www.youtube.com/watch?v=_7OM-cMYWbQ&t=312s&ab_channel=BroCode )
+
+
 Readme in progress....
 v0.91
 
