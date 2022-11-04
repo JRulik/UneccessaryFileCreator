@@ -2,29 +2,20 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>UneccessaryFileCreator</groupId>
   <artifactId>UneccessaryFileCreator</artifactId>
-  <packaging>jar</packaging>
   <version>0.0.1-SNAPSHOT</version>
-  <name>UneccessaryFileCreator-Maven</name>
-  <url>http://maven.apache.org</url>
   
-    <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <javafx.version>17.0.1</javafx.version>
-    <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
-  </properties>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.openjfx</groupId>
-      <artifactId>javafx-controls</artifactId>
-      <version>${javafx.version}</version>
-    </dependency>
-    <dependency>
-	    <groupId>org.openjfx</groupId>
-	    <artifactId>javafx-fxml</artifactId>
-	    <version>16-ea+5</version>
-	</dependency>
-  </dependencies>
+      <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>17.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>17.0.1</version>
+        </dependency>
+    </dependencies>
   
   <build>
     <sourceDirectory>src</sourceDirectory>
@@ -36,6 +27,7 @@
         </excludes>
       </resource>
     </resources>
+
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -44,8 +36,62 @@
           <release>17</release>
         </configuration>
       </plugin>
+                  <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>${mainClass}</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+      <plugin>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <version>0.0.8</version>
+            <configuration>
+		        <stripDebug>true</stripDebug>
+		        <compress>2</compress>
+		        <noHeaderFiles>true</noHeaderFiles>
+		        <noManPages>true</noManPages>
+		        <launcher>UneccessaryFC</launcher>
+		        <jlinkImageName>UneccessaryFCimg</jlinkImageName>
+		        <jlinkZipName>UneccessaryFCzip</jlinkZipName>
+		        <mainClass>application.Main</mainClass>
+   	 		</configuration>
+        <executions>
+            <execution>
+                <!-- Default configuration for running -->
+                <!-- Usage: mvn clean javafx:run -->
+                <id>default-cli</id>
+                <configuration>
+                    <mainClass>application.Main</mainClass>
+                </configuration>
+            </execution>
+        </executions>
+       </plugin>
+       
+       <plugin>
+		  <groupId>org.panteleyev</groupId>
+		  <artifactId>jpackage-maven-plugin</artifactId>
+		  <version>1.5.2</version>
+		  <configuration>
+			    <name>UneccessaryFC</name>
+			    <appVersion>1.0.0</appVersion>
+			    <vendor>JRulik</vendor>
+			    <destination>target/dist</destination>
+			    <module>UneccessaryFileCreator/application.Main</module>
+			    <runtimeImage>target/UneccessaryFCimg</runtimeImage>
+			    <icon>${project.basedir}/resources/icon.png</icon>
+			    <javaOptions>
+			      <option>-Dfile.encoding=UTF-8</option>
+			    </javaOptions>
+		  </configuration>
+	</plugin>
+
     </plugins>
   </build>
-  
-  
 </project>
